@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Works To Be Done</title>
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+
+    <div class="container">
+
+        <h1>Works To Be Done</h1>
+
+        <div class="input-box">
+            <input type="text" id="taskInput" placeholder="Enter a new task...">
+            <button class="add-btn" onclick="addTask()">Add Task</button>
+        </div>
+
+        <ul id="taskList"></ul>
+
+    </div>
+
+    <script>
+        let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+        function showTasks() {
+
+            let taskList = document.getElementById("taskList");
+
+            taskList.innerHTML = "";
+
+            if (tasks.length === 0) {
+                taskList.innerHTML = '<p class="empty">No tasks yet!</p>';
+            }
+
+            tasks.forEach(function(task, index) {
+
+                let li = document.createElement("li");
+
+                let span = document.createElement("span");
+                span.textContent = task;
+
+                let button = document.createElement("button");
+                button.textContent = "Delete";
+                button.className = "delete-btn";
+
+                button.onclick = function() {
+                    deleteTask(index);
+                };
+
+                li.appendChild(span);
+                li.appendChild(button);
+
+                taskList.appendChild(li);
+
+            });
+
+        }
+
+        function addTask() {
+
+            let input = document.getElementById("taskInput");
+
+            let task = input.value.trim();
+
+            if (task === "") {
+                alert("Please enter a task!");
+                return;
+            }
+
+            tasks.push(task);
+
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+
+            input.value = "";
+
+            showTasks();
+
+        }
+
+        function deleteTask(index) {
+
+            tasks.splice(index, 1);
+
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+
+            showTasks();
+
+        }
+
+        showTasks();
+
+        document.getElementById("taskInput").addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                addTask();
+            }
+        });
+
+    </script>
+
+</body>
+</html>
